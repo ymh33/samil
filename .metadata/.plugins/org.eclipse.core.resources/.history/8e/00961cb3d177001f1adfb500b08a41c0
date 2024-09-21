@@ -1,0 +1,21 @@
+package com.oracle.samil.MhDao;
+
+import java.util.List;
+
+import com.oracle.samil.Amodel.Emp;
+import com.oracle.samil.Amodel.EmpSalDept;
+import com.oracle.samil.Amodel.Sal;
+
+public interface SalDao {
+
+
+	int totalSal();
+
+	List<Emp> totalEmp(EmpSalDept EmpSalDept);
+
+	List<Sal> salDList(Sal sal);
+
+	EmpSalDept shemp(EmpSalDept EmpSalDept);
+
+
+}

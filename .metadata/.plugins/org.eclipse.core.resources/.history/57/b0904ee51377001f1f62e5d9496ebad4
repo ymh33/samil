@@ -1,0 +1,83 @@
+package com.oracle.samil.MhDao;
+
+import java.util.List;
+
+import org.apache.ibatis.session.SqlSession;
+import org.springframework.stereotype.Repository;
+
+import com.oracle.samil.Amodel.Emp;
+import com.oracle.samil.Amodel.Sal;
+import com.oracle.samil.MhService.Paging;
+
+import lombok.RequiredArgsConstructor;
+
+@Repository
+@RequiredArgsConstructor
+public class SalDoaI implements SalDao {
+	
+	private final SqlSession session;
+
+	@Override
+	public int totalSal() {
+		int totSalCount = 0;
+		System.out.println("EmpDaoImpl Start totalEmp..." );
+		
+		try {
+			totSalCount = session.selectOne("salTotal");
+			System.out.println("EmpDaoImpl totalSal totEmpCount->" +totSalCount);
+			
+		} catch (Exception e) {
+			System.out.println("EmpDaoImpl totalSal e.getMessage()->"+e.getMessage());
+		}
+		
+		return totSalCount;
+	
+	}
+
+	@Override
+	public List<Emp> totalEmp(Emp emp) {
+		List<Emp> totEmpCount  = null;
+		System.out.println("EmpDaoImpl Start totalEmp..." );
+		
+		try {
+			totEmpCount = session.selectList("empTotal", emp);
+			System.out.println("EmpDaoImpl totalSal totEmpCount->" +totEmpCount);
+			
+		} catch (Exception e) {
+			System.out.println("EmpDaoImpl totalSal e.getMessage()->"+e.getMessage());
+		}
+		
+		return totEmpCount;
+	}
+
+	@Override
+	public List<Sal> salDList(Sal sal) {
+		List<Sal> salDList = null;
+		
+		try {
+			salDList = session.selectList("salDList", sal);
+			
+		} catch (Exception e) {
+			
+		}
+		return salDList;
+	}
+
+	@Override
+	public List<Emp> shemp(Emp emp) {
+		List<Emp> shemp = null;
+		
+		try {
+			shemp = session.selectList("shemp", emp);
+			
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+			
+		}
+		
+		return shemp;
+	}
+
+
+
+}

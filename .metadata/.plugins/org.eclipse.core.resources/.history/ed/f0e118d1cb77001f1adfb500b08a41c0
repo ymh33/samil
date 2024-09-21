@@ -1,0 +1,20 @@
+package com.oracle.samil.HeService;
+
+import java.util.List;
+import java.util.Map;
+
+import com.oracle.samil.Amodel.Attendance;
+import com.oracle.samil.Amodel.Emp;
+import com.oracle.samil.Amodel.FurloughDetails;
+
+public interface AttService {
+	List<Emp> myInfo(int empno);
+	List<Attendance> myAttList(int empno);
+	List<Map<String, Object>> deptStatusList(Integer statusCode);
+	List<Attendance> myAttMList(int empno);
+	int totalVacation(int empno);
+	int restVacation(int empno);
+	List<FurloughDetails> myLeaveList();
+	List<FurloughDetails> deptLeaveList(FurloughDetails furloughDetails);
+	List<Map<String, Object>> deptAttByNameStatus(Map<String, Object> params);
+}

@@ -1,0 +1,30 @@
+package com.oracle.samil.TrService;
+
+import org.springframework.stereotype.Service;
+
+
+import com.oracle.samil.Amodel.Emp;
+import com.oracle.samil.TrDao.EmpDao;
+
+import lombok.RequiredArgsConstructor;
+
+@Service
+@RequiredArgsConstructor
+public class EmpServiceImpl implements EmpService {
+	
+	private final EmpDao    ed;
+
+	@Override
+	public boolean validateUser(String empno, String password) {
+
+		return true;
+	}
+
+	@Override
+	public Emp findEmpbyEmpno(String empno) {
+		System.out.println("findEmpbyEmpno->"+empno);
+		Emp emp= ed.findEmpbyEmpno(empno);
+		return emp;
+	}
+
+}

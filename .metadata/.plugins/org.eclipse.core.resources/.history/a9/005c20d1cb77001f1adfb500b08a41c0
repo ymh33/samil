@@ -1,0 +1,11 @@
+package com.oracle.samil.TrService;
+
+import com.oracle.samil.Amodel.Emp;
+
+public interface EmpService {
+
+	boolean validateUser(String empno, String password);
+
+	Emp findEmpbyEmpno(String empno);
+
+}

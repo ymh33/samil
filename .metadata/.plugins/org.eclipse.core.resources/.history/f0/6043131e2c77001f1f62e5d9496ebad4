@@ -1,0 +1,20 @@
+package com.oracle.samil.MhService;
+
+import java.util.List;
+import java.util.Map;
+
+import com.oracle.samil.Amodel.Emp;
+import com.oracle.samil.Amodel.Sal;
+
+public interface SalService {
+
+	int totalSal();
+
+	List<Emp> totalEmp(Emp emp);
+
+	List<Sal> salDList(Sal sal);
+
+	List<Emp> shemp(Emp emp);
+
+
+}

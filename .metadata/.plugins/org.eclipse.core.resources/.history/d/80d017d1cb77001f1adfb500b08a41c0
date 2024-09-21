@@ -1,0 +1,115 @@
+package com.oracle.samil.HeDao;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.apache.ibatis.session.SqlSession;
+import org.springframework.stereotype.Repository;
+
+import com.oracle.samil.Amodel.Attendance;
+import com.oracle.samil.Amodel.Emp;
+import com.oracle.samil.Amodel.FurloughDetails;
+
+import lombok.RequiredArgsConstructor;
+
+
+@Repository
+@RequiredArgsConstructor
+public class AttDaoImpl implements AttDao {
+
+	private final SqlSession session;
+
+	@Override
+	public List<Emp> myInfo(int empno) {session.selectList("myEmpInfo", empno);
+		return session.selectList("myEmpInfo", empno);
+	}
+
+	@Override
+	public List<Attendance> myAttList(int empno) {
+		System.out.println("    AttDaoImpl myAttList");
+		List<Attendance> myAtt = null;
+		try {
+			myAtt = session.selectList("myEmpAttList", empno);
+			System.out.println("     AttDaoImpl myAttList myAtt : " + myAtt.size());
+		} catch (Exception e) {
+			System.out.println("     AttDaoImpl myAttList ErrMessage : " + e.getMessage());
+		}
+		return myAtt;
+	}
+
+	@Override
+	public List<Attendance> myAttMList(int empno) {
+		System.out.println("    AttDaoImpl myAttMList");
+		List<Attendance> myAttM = null;
+		try {
+			myAttM = session.selectList("myEmpAttMList", empno);
+			System.out.println("     AttDaoImpl myAttMList myAttM : " + myAttM.size());
+		} catch (Exception e) {
+			System.out.println("     AttDaoImpl myAttMList ErrMessage : " + e.getMessage());
+		}
+		return myAttM;
+	}
+
+	@Override
+	public int totalVacation(int empno) {
+		System.out.println("    AttDaoImpl totalVacation");
+		int myTotalVacation = 0;
+		try {
+			myTotalVacation = session.selectOne("myTotvaction", empno);
+			System.out.println("     AttDaoImpl totalVacation myTotalVacation : " + myTotalVacation);
+		} catch (Exception e) {
+			System.out.println("     AttDaoImpl totalVacation ErrMessage : " + e.getMessage());
+		}
+		return myTotalVacation;
+	}
+
+	@Override
+	public int restVacation(int empno) {
+		System.out.println("    AttDaoImpl restVacation");
+		int myRestVacation = 0;
+		try {
+			myRestVacation = session.selectOne("restVacation", empno);
+			System.out.println("     AttDaoImpl restVacation myRestVacation : " + myRestVacation);
+		} catch (Exception e) {
+			System.out.println("     AttDaoImpl restVacation ErrMessage : " + e.getMessage());
+		}
+		return myRestVacation;
+	}
+
+	@Override
+	public List<FurloughDetails> myLeaveList() {
+		System.out.println("    AttDaoImpl myLeaveList");
+		List<FurloughDetails> myLeave = null;
+		try {
+			myLeave = session.selectList("myLeaveList");
+			System.out.println("     AttDaoImpl myLeaveList myLeave : " + myLeave.size());
+		} catch (Exception e) {
+			System.out.println("     AttDaoImpl myLeaveList ErrMessage : " + e.getMessage());
+		}
+		return myLeave;
+	}
+
+	@Override
+	public List<FurloughDetails> deptLeaveList(FurloughDetails furloughDetails) {
+		System.out.println("    AttDaoImpl deptLeaveList");
+		List<FurloughDetails> deptLeave = null;
+		try {
+			deptLeave = session.selectList("deptVacationList", furloughDetails);
+			System.out.println("     AttDaoImpl deptLeaveList deptLeave : " + deptLeave.size());
+		} catch (Exception e) {
+			System.out.println("     AttDaoImpl deptLeaveList ErrMessage : " + e.getMessage());
+		}
+		return deptLeave;
+	}
+
+	@Override
+	public List<Map<String, Object>> deptStatusList(Integer statusCode) {
+		return session.selectList("deptStatus", statusCode);
+	}
+
+	@Override
+	public List<Map<String, Object>> deptAttByNameStatus(Map<String, Object> params) {
+		return session.selectList("deptAttByNameNStatus", params);
+	}
+}

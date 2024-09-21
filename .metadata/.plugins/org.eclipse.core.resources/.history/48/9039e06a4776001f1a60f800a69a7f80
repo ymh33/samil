@@ -1,0 +1,76 @@
+package com.oracle.samil.MhService;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.stereotype.Service;
+
+import com.oracle.samil.Amodel.Emp;
+import com.oracle.samil.MhDao.SalDao;
+
+import lombok.RequiredArgsConstructor;
+
+@Service
+@RequiredArgsConstructor
+public class SalServiceI implements SalService {
+	private final SalDao sd;
+	
+
+	@Override
+	public int totalSal() {
+		System.out.println("EmpServiceImpl totalEmp Start ..." );
+		int totSalCnt = sd.totalSal();
+		System.out.println("EmpServiceImpl totalEmp totEmpCnt->" + totSalCnt);
+		return totSalCnt;
+	}
+
+
+	@Override
+	public List<Emp> totalEmp(Emp emp) {
+		List<Emp> totSalCnt = null;
+		System.out.println("EmpServiceImpl listManager start");
+		totSalCnt = sd.totalEmp(emp);
+		return totSalCnt;
+	}
+
+
+	@Override
+	public Map<String, Object> pagingSelect(int page, int size) {
+		Map<String, Object> map = new HashMap<>();
+		int block = 10;
+		
+		int count = sd.totalSal();
+		
+		int startRow = (page-1) * size + 1;
+		int endRow = page * size;
+		
+		int maxPage = (int)(Math.ceil((double)count / size));
+		int startPage = (((int)(Math.ceil((double)page/block))) -1) * block +1;
+		int endPage = startPage + block -1;
+		
+		if (endPage > maxPage) {
+			endPage = maxPage;
+		}
+		
+		Paging paging = new Paging();
+		
+		paging.setPage(page);
+		paging.setStartRow(startRow);
+		paging.setEndRow(endRow);
+		paging.setMaxPage(maxPage);
+		paging.setStartPage(startPage);
+		paging.setEndPage(endPage);
+		paging.setSize(size);
+		
+		List<Emp> pagingList = sd.pagingSelect(paging);
+		
+		map.put("pagingList", pagingList);
+		map.put("paging", paging);
+		
+		
+		
+		return map;
+	}
+
+}

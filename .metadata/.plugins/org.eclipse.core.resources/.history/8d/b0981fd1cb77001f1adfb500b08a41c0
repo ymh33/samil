@@ -1,0 +1,31 @@
+package com.oracle.samil.TrDao;
+
+import org.apache.ibatis.session.SqlSession;
+import org.springframework.stereotype.Repository;
+
+import com.oracle.samil.Amodel.Emp;
+
+import lombok.RequiredArgsConstructor;
+
+@Repository
+@RequiredArgsConstructor
+public class EmpDaoImpl implements EmpDao {
+
+	private final SqlSession session;
+	
+	@Override
+	public Emp findEmpbyEmpno(String empno) {
+		System.out.println("asd"+empno);
+		System.out.println("findEmpbyEmpno start..");
+		Emp emp = new Emp();
+		try {
+			System.out.println("findEmpbyEmpno ->"+empno);
+			emp = session.selectOne("trEmpSelect",    empno);
+			
+		} catch (Exception e) {
+			System.out.println("EmpDaoImpl detail Exception->"+e.getMessage());
+		}
+		return emp;
+	}
+
+}
