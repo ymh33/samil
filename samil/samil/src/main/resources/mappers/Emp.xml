@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace = "com.oracle.samil.Amodel.EmpMapper">
+	<select id="trEmpSelect" parameterType="string" resultType="Emp">
+		SELECT		*
+		FROM		emp
+		WHERE		empno = #{empno}
+	</select>
+	<select id="trFindPass" parameterType="LoginInfo" resultType="LoginInfo">
+		SELECT		*
+		FROM		logininfo
+		WHERE		passquiz = #{passQuiz} and passanswer=#{passAnswer} and empno=#{empno}
+	</select>
+	<select id="trSelectDept" resultType="Dept">
+		SELECT		*
+		FROM		dept
+	</select>
+	<select id="trInsertEmp"  parameterType="Emp" >
+		insert	into emp (empno, email, name, phone, deptno, grade, job, address, status, admin, image, hiredate, totalvacation, restvacation, account, bank, delcheck, recenteditor, recenteditdate)
+		 values	(#{empno},#{email},#{name}, #{phone}, #{deptno},#{grade},#{job},#{address},100, 170, 0, #{hiredate}, 12, 12, #{account}, #{bank}, 0, #{recentEditor}, #{recentEditDate})
+	</select>
+	<select id="trSelectEmp" resultType="Emp">
+		SELECT		*
+		FROM		Emp
+	</select>
+	<select id="trSelectEmpDept" resultType="EmpDept">
+		SELECT *
+		FROM emp
+		INNER JOIN dept
+		on emp.deptno = dept.deptno	
+	</select>
+	<select id="trFindEmpDept"  parameterType="String"  resultType="EmpDept">
+		SELECT *
+		FROM emp
+		INNER JOIN dept
+		on emp.deptno = dept.deptno	
+		WHERE empno = #{emp1empno} 
+	</select>
+	<select id="trUpdateEmp"  parameterType="Emp"  resultType="int">
+		UPDATE emp
+		SET phone = #{phone}, grade= #{grade}, job=#{job}, bank=#{bank}, account=#{account}, address=#{address}, deptno=#{deptno}, recenteditor=#{recentEditor},recentEditDate=#{recentEditDate}, admin=#{admin} 
+		WHERE empno = #{empno}
+	</select>
+	<select id="trSearchEmpByKeyword"  parameterType="String"  resultType="EmpDept">
+		SELECT *
+		FROM emp  e 
+		INNER JOIN dept d 
+		ON e.deptno = d.deptno	
+		WHERE e.name like  '%' || #{keyword} || '%' OR d.deptname like  '%' || #{keyword} || '%'
+	</select>
+	<select id="trShowDeptMember"  parameterType="int"  resultType="EmpDept">
+		SELECT *
+		FROM emp  e 
+		INNER JOIN dept d 
+		ON e.deptno = d.deptno	
+		WHERE e.deptno = #{deptno}
+	</select>
+
+	<select id="tkDeptListAll" parameterType="Dept" resultType="Dept">
+		SELECT *
+		FROM dept
+	</select>
+	
+	<select id="tkEmpDeptListAll" parameterType="int" resultType="Emp">
+		SELECT *
+		FROM emp
+		WHERE deptno=#{deptno}
+	</select>
+</mapper>

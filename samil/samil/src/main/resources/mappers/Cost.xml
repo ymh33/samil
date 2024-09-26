@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.oracle.samil.HbDao.CostDao">
+	<select id="getCostList" resultType="Cost">
+   		select c.costYear, c.costTitle, c.costMoney, c.attach, c.status, c.signdate, c.codeNum,
+          			cc.codeName, e.name, e.deptno
+    			From cost c, emp e, CostCode cc
+    			WHERE c.empno = e.empno 
+    			and cc.codeNum = c.codeNum
+    			order by c.costyear desc
+ 	</select>
+ 	<select id="getcostCode" resultType="costCode">
+ 		select *
+ 		From costCode
+ 		order by codeNum
+ 	</select>
+    <select id="searchCost" parameterType="Cost" resultType="Cost">
+		 SELECT * 
+		    FROM 
+		    ( 
+		        SELECT ROWNUM rn, a.* 
+		        FROM 
+		        (
+		            SELECT *
+		            FROM cost
+		            <where>
+		                <choose>
+		                    <when test="search == 'status'">
+		                        status LIKE '%' || #{keyword} || '%'
+		                    </when>
+		                    <when test="search == 'empno'">
+		                        empno LIKE '%' || #{keyword} ||'%'
+		                    </when>
+		                    <when test="search == 'codeName'">
+		                        codeName LIKE '%' || #{keyword} ||'%'
+		                    </when>
+		                    <otherwise>
+		                        codeName LIKE '%' || #{keyword} ||'%'
+		                    </otherwise>
+		                </choose>
+		            </where>
+		            ORDER BY costYear desc
+		        ) a
+		    )
+</select>
+ 	<select id="getMaxCodeNum" resultType="int">
+ 		select MAX(codeNum) From costCode
+ 	</select>
+ 	<select id="getAdminCost" resultType="Cost">
+ 		select c.*, cc.*, e.name, e.deptno
+ 		From cost c, costcode cc, emp e
+ 		where c.status = 100
+ 		AND     c.codenum = cc.codenum
+ 		AND     c.empno = e.empno
+ 		Order by c.costYear
+ 	</select>
+	<insert id="costCodePlus" parameterType="costCode">
+	    insert into costCode (codeNum, codeName)
+	    values (#{codeNum}, #{codeName})
+	</insert>
+ 	<delete id="costCodeDel" parameterType="int">
+ 		Delete 
+ 		From costCode
+ 		where codeNum = #{codeNum}
+ 	</delete>
+	 <select id="getCodeNameByCodeNum" parameterType="int" resultType="String">
+	    SELECT codeName
+	    FROM costCode
+	    WHERE codeNum = #{codeNum}
+	</select>
+	<insert id="insertCost" parameterType="cost">
+ 	   INSERT INTO cost (costTitle, costMoney, codeNum, empno, attach, signdate, status)
+    	VALUES (#{costTitle}, #{costMoney}, #{codeNum}, #{empno}, #{attach}, #{signdate, jdbcType=TIMESTAMP},#{status})
+	</insert>
+	<select id="getcostDetail" parameterType="Cost" resultType="Cost">
+	    SELECT c.*, cc.codeName, e.name, e.deptno
+	    FROM cost c, CostCode cc, emp e
+	    WHERE cc.codeNum = c.codeNum
+		AND		c.empno = e.empno
+		AND 	   c.costTitle = #{costTitle}
+	</select>
+	
+	<update id="updateStatus" parameterType="Map">
+    UPDATE cost
+    SET status = #{newStatus}
+    WHERE costTitle = #{costTitle}
+	</update>
+	
+
+
+
+ 	
+</mapper>

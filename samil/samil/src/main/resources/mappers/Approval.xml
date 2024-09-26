@@ -1,0 +1,269 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.oracle.samil.SeDao.ApprovalDao">
+	<select id="allApp" resultType="int">
+		SELECT count(*) FROM Approval 
+	</select>
+	
+	<select id="allAppList" parameterType="Approval" resultType="Approval">
+	    SELECT *
+	    FROM (
+	        SELECT a.empno, a.approvalTitle, a.approvalCondition, a.approvalDate, a.approvalNum, e.name, df.documentFormId, ROWNUM rn
+	        FROM Approval a
+	        LEFT JOIN Emp e ON a.empno = e.empno
+	        LEFT JOIN DocumentForm df ON a.documentFormId = df.documentFormId
+	        ORDER BY a.approvalNum DESC
+	    )
+	    WHERE rn BETWEEN #{start} AND #{end}
+	</select>
+
+	
+	<select id="allAppListSearch" parameterType="Approval" resultType="Approval">
+    	SELECT a.rn, a.empno, a.approvalTitle, a.approvalCondition, e.name, a.approvalDate, a.approvalNum, df.documentFormId
+	    FROM (
+	        SELECT rownum rn, a.empno, a.approvalTitle, a.approvalCondition, a.approvalDate, a.approvalNum, a.documentFormId
+	        FROM (
+	            SELECT a.empno, a.approvalTitle, a.approvalCondition, a.approvalDate, a.approvalNum, a.documentFormId  
+	            FROM Approval a
+	            <where>
+	                <choose>
+	                    <when test="search == 's_approvalTitle'">
+	                        a.approvalTitle like '%' || #{keyword} || '%'
+	                    </when>
+	                    <when test="search == 's_approvalCondition'">
+	                        a.approvalCondition like '%' || #{keyword} || '%'
+	                    </when>
+	                    <otherwise>
+	                        1=1
+	                    </otherwise>
+	                </choose>
+	            </where>
+	            ORDER BY a.approvalNum DESC
+	        ) a
+	    ) a 
+	    LEFT JOIN Emp e ON a.empno = e.empno
+	    LEFT JOIN DocumentForm df ON a.documentFormId = df.documentFormId
+	    <where>
+	        <choose>
+	            <when test="search == 's_name'">
+	                e.name like '%' || #{keyword} || '%'
+	            </when>
+	            <otherwise>
+	                1=1
+	            </otherwise>
+	        </choose>
+	        AND rn BETWEEN #{start} AND #{end}
+	    </where>
+	</select>
+	
+	<select id="finApp" resultType="int">
+		SELECT count(*) FROM Approval 
+	</select>
+	
+	<select id="finAppList" parameterType="Approval" resultType="Approval">
+    	SELECT *
+	    FROM (
+	        SELECT a.empno, a.approvalTitle, a.approvalCondition, a.approvalDate, a.approvalNum, e.name, df.documentFormId, ROWNUM rn
+	        FROM Approval a
+	        LEFT JOIN Emp e ON a.empno = e.empno
+	        LEFT JOIN DocumentForm df ON a.documentFormId = df.documentFormId
+			WHERE ApprovalCondition IN (130,120)
+	        ORDER BY a.approvalNum DESC
+	    )
+    	WHERE rn BETWEEN #{start} AND #{end}
+	</select>
+	
+	<select id="finAppListSearch" parameterType="Approval" resultType="Approval">
+	    SELECT a.rn, a.empno, a.approvalTitle, a.approvalCondition, e.name, a.approvalDate, a.approvalNum, df.documentFormId
+	    FROM (
+	        SELECT rownum rn, a.empno, a.approvalTitle, a.approvalCondition, a.approvalDate, a.approvalNum, a.documentFormId
+	        FROM (
+	            SELECT a.empno, a.approvalTitle, a.approvalCondition, a.approvalDate, a.approvalNum, a.documentFormId  
+	            FROM Approval a
+	            <where>
+	                <choose>
+	                    <when test="search == 's_approvalTitle'">
+	                        a.approvalTitle like '%' || #{keyword} || '%'
+	                    </when>
+	                    <when test="search == 's_approvalCondition'">
+	                        a.approvalCondition like '%' || #{keyword} || '%'
+	                    </when>
+	                    <otherwise>
+	                        1=1
+	                    </otherwise>
+	                </choose>
+	                AND ApprovalCondition IN (130,120)
+	            </where>
+	            ORDER BY a.approvalNum DESC
+	        ) a
+	    ) a 
+	    LEFT JOIN Emp e ON a.empno = e.empno
+	    LEFT JOIN DocumentForm df ON a.documentFormId = df.documentFormId
+	    <where>
+	        <choose>
+	            <when test="search == 's_name'">
+	                e.name like '%' || #{keyword} || '%'
+	            </when>
+	            <otherwise>
+	                1=1
+	            </otherwise>
+	        </choose>
+	        AND rn BETWEEN #{start} AND #{end}
+	    </where>
+	</select>
+	
+	<select id="stnApp" resultType="int">
+		SELECT count(*) FROM Approval 
+	</select>
+	
+	<select id="stnAppList" parameterType="Approval" resultType="Approval">
+    	SELECT *
+	    FROM (
+	        SELECT a.empno, a.approvalTitle, a.approvalCondition, a.approvalDate, a.approvalNum, e.name, df.documentFormId, ROWNUM rn
+	        FROM Approval a
+	        LEFT JOIN Emp e ON a.empno = e.empno
+	        LEFT JOIN DocumentForm df ON a.documentFormId = df.documentFormId
+			WHERE ApprovalCondition IN (110,100)
+	        ORDER BY a.approvalNum DESC
+	    )
+    	WHERE rn BETWEEN #{start} AND #{end}
+	</select>
+	
+	<select id="stnAppListSearch" parameterType="Approval" resultType="Approval">
+	    SELECT a.rn, a.empno, a.approvalTitle, a.approvalCondition, e.name, a.approvalDate, a.approvalNum, df.documentFormId
+	    FROM (
+	        SELECT rownum rn, a.empno, a.approvalTitle, a.approvalCondition, a.approvalDate, a.approvalNum, a.documentFormId
+	        FROM (
+	            SELECT a.empno, a.approvalTitle, a.approvalCondition, a.approvalDate, a.approvalNum, a.documentFormId  
+	            FROM Approval a
+	            <where>
+	                <choose>
+	                    <when test="search == 's_approvalTitle'">
+	                        a.approvalTitle like '%' || #{keyword} || '%'
+	                    </when>
+	                    <when test="search == 's_approvalCondition'">
+	                        a.approvalCondition like '%' || #{keyword} || '%'
+	                    </when>
+	                    <otherwise>
+	                        1=1
+	                    </otherwise>
+	                </choose>
+	                AND ApprovalCondition IN (110,100)
+	            </where>
+	            ORDER BY a.approvalNum DESC
+	        ) a
+	    ) a 
+	    LEFT JOIN Emp e ON a.empno = e.empno
+	    LEFT JOIN DocumentForm df ON a.documentFormId = df.documentFormId
+	    <where>
+	        <choose>
+	            <when test="search == 's_name'">
+	                e.name like '%' || #{keyword} || '%'
+	            </when>
+	            <otherwise>
+	                1=1
+	            </otherwise>
+	        </choose>
+	        AND rn BETWEEN #{start} AND #{end}
+	    </where>
+	</select>
+	
+	<select id="adminApp" resultType="int">
+		SELECT count(*) FROM Approval 
+	</select>
+	
+	<select id="adminAppList" parameterType="Approval" resultType="Approval">
+    	SELECT *
+		FROM (
+		    SELECT a.empno, a.approvalTitle, a.approvalCondition, a.approvalDate, a.approvalNum, e.name, d.deptname, ROWNUM rn
+		    FROM Approval a
+		    LEFT JOIN Emp e ON a.empno = e.empno
+		    LEFT JOIN Dept d ON e.deptno = d.deptno
+		    ORDER BY a.approvalNum DESC
+		)
+		WHERE rn BETWEEN #{start} AND #{end}
+	</select>
+	
+	<select id="adminAppListSearch" parameterType="Approval" resultType="Approval">
+	    SELECT a.rn, a.empno, a.approvalTitle, a.approvalCondition, e.name, a.approvalDate, a.approvalNum, d.deptname 
+	    FROM (
+	        SELECT rownum rn, a.empno, a.approvalTitle, a.approvalCondition, a.approvalDate, a.approvalNum 
+	        FROM (
+	            SELECT a.empno, a.approvalTitle, a.approvalCondition, a.approvalDate, a.approvalNum 
+	            FROM Approval a
+	            <where>
+	                <choose>
+	                    <when test="search == 's_approvalTitle'">
+	                        a.approvalTitle like '%' || #{keyword} || '%'
+	                    </when>
+	                    <when test="search == 's_approvalCondition'">
+	                        a.approvalCondition like '%' || #{keyword} || '%'
+	                    </when>
+	                    <otherwise>
+	                        1=1
+	                    </otherwise>
+	                </choose>
+	            </where>
+	            ORDER BY a.approvalNum DESC
+	        ) a
+	    ) a 
+	    LEFT JOIN Emp e ON a.empno = e.empno
+	    LEFT JOIN Dept d ON e.deptno = d.deptno
+	    <where>
+	        <choose>
+	            <when test="search == 's_name'">
+	                e.name like '%' || #{keyword} || '%'
+	            </when>
+	            <when test="search == 's_deptName'">
+	                d.deptname like '%' || #{keyword} || '%'
+	            </when>
+	            <otherwise>
+	                1=1
+	            </otherwise>
+	        </choose>
+	        AND rn BETWEEN #{start} AND #{end}
+	    </where>
+	</select>
+	
+    <select id="detailApp" parameterType="int" resultType="Approval">
+        SELECT a.*, 
+		       df.documentFormId, df.documentFormTitle, 
+		       e.name, d.deptname, e.grade, 
+		       fd.furloughStartDate, fd.furloughEndDate, 
+		       fd.furloughCnt, fd.furloughServiceData, 
+		       cd.costDetailsCode, cd.costDetailsCnt, 
+		       cd.costQuantity, cd.costUnitPrice, 
+		       cd.costAmount, e.job
+		FROM Approval a
+		LEFT JOIN DocumentForm df ON a.documentFormId = df.documentFormId 
+		LEFT JOIN emp e ON a.empno = e.empno
+		LEFT JOIN dept d ON e.deptno = d.deptno
+		LEFT JOIN CostDetails cd ON a.approvalNum = cd.approvalNum AND a.documentFormId = cd.documentFormId
+		LEFT JOIN FurloughDetails fd ON a.approvalNum = fd.approvalNum AND a.documentFormId = fd.documentFormId
+		WHERE a.approvalNum = #{approvalNum} AND a.documentFormId = #{documentFormId}
+    </select>
+    
+    <select id="approvalLineList" resultType="ApprovalLine">
+	    SELECT al.approverOrder, al.documentFormId, al.approvalNum, al.approvalCompleteDate,
+	           al.approvalCnt, al.approvalType, e.name, e.grade, e.empno, e.job
+	    FROM   ApprovalLine al
+	    LEFT   JOIN emp e ON al.empno = e.empno
+	    WHERE  approvalNum = #{approvalNum}
+	    AND    (approverOrder IN (110, 120, 130) OR approverOrder >= 900)
+	    ORDER  BY approverOrder ASC
+	</select>
+	
+	<update id="appUpdate" parameterType="Approval">
+	    UPDATE Approval
+	    SET 
+	        approvalTitle = #{approvalTitle}, 
+	        relatedDocuments = #{relatedDocuments}, 
+	        imageAttachment = #{imageAttachment}
+	    WHERE 
+	        approvalNum = #{approvalNum}
+	</update>
+
+	
+</mapper>
+

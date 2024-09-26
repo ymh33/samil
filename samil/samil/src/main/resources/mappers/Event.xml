@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.oracle.samil.HsDao.HsCalDao">
+	<select id="tkEventListAll" parameterType="map" resultType="Event">
+		<![CDATA[
+			SELECT DISTINCT
+		        e.eventId,
+		        e.eventTitle,
+		        e.eventWriter,
+		        e.eventStartdate,
+	       		e.eventEnddate,
+		        e.eventCategory,
+		        e.eventLoc,
+		        e.eventMemo,
+		        e.eventFile,
+		        e.eventDelete
+		    FROM event e
+		    Left JOIN attendee a ON e.eventId=a.eventId
+		    WHERE e.eventDelete=100
+		    AND e.eventCategory=#{eventCategory}
+		    AND (e.eventWriter = #{empno} OR (a.attendId = #{empno} AND a.attendres=110))
+		    AND (
+	    			TRUNC(eventStartdate)=TRUNC(SYSTIMESTAMP)
+	    			OR    TRUNC(eventEnddate)=TRUNC(SYSTIMESTAMP)
+				)		
+		    ORDER BY e.eventStartdate, e.eventId
+	    ]]>
+	</select>
+	
+	<select id="tkEventComp" parameterType="Event" resultType="Event">
+		<![CDATA[
+			SELECT *
+			FROM event
+			WHERE eventCategory=100
+			AND   (TRUNC(eventStartdate)=TRUNC(SYSTIMESTAMP)
+	    	OR    TRUNC(eventEnddate)=TRUNC(SYSTIMESTAMP))
+	    ]]>
+	</select>
+	
+	<select id="tkEventCategory" parameterType="Event" resultType="Event">
+		SELECT DISTINCT	eventCategory
+		FROM event
+		ORDER BY eventCategory
+	</select>
+	
+	<select id="tkEventSelOne" parameterType="map" resultType="Attendee">
+		SELECT 
+		    e.eventId,
+		    e.eventTitle,
+		    e.eventWriter,
+		    e.eventStartdate,
+		    e.eventEnddate,
+		    e.eventCategory,
+		    e.eventLoc,
+		    e.eventMemo,
+		    e.eventFile,
+		    e.eventDelete,
+		    a.attendId,
+		    a.attendRsvp,
+		    a.attendRes
+		FROM event e
+		LEFT JOIN attendee a ON e.eventId = a.eventId AND a.attendId =#{empno}
+		WHERE e.eventId = #{eventId}
+	</select>
+	
+	<update id="tkEventUpdate" parameterType="Event">
+		UPDATE  event 
+		SET		eventTitle=#{eventTitle},
+		    	eventLoc=#{eventLoc}, 
+		    	eventMemo=#{eventMemo}, 
+		    	eventStartdate=#{eventStartdate}, 
+				eventEnddate=#{eventEnddate}, 
+		    	eventFile=#{eventFile}
+		WHERE 	eventId=#{eventId}
+	</update>
+	
+	<insert id="tkEventInsert" parameterType="Event">
+		INSERT INTO event(eventId, 
+						  eventTitle,
+						  eventWriter,
+						  eventStartdate, 
+						  eventEnddate, 
+						  eventCategory, 
+						  eventMemo, 
+						  eventLoc, 
+						  eventFile, 
+						  eventDelete)
+		VALUES(event_seq.nextval, 
+			   #{eventTitle},
+			   #{eventWriter},
+			   #{eventStartdate}, 
+			   #{eventEnddate}, 
+			   #{eventCategory}, 
+			   #{eventMemo}, 
+			   #{eventLoc}, 
+			   #{eventFile}, 
+			   #{eventDelete})
+	</insert>
+	
+	<delete id="tkEventDelete" parameterType="int">
+		DELETE FROM event
+		WHERE eventId=#{eventId}
+	</delete>
+	
+	<update id="tkeventRestore" parameterType="Event">
+		UPDATE  event
+		SET		eventDelete=#{eventDelete}
+		WHERE 	eventId=#{eventId}
+	</update>
+	
+	<update id="tkEventDelupt" parameterType="Event">
+		UPDATE  event
+		SET		eventDelete=#{eventDelete}
+		WHERE 	eventId=#{eventId}
+	</update>
+	
+	<select id="tkEventListDel" parameterType="map" resultType="Event">
+		SELECT *
+		FROM event
+		WHERE eventDelete=110
+		AND eventWriter=#{empno}
+	</select>
+	
+	<select id="tkEventAdList" parameterType="event" resultType="Event">
+		SELECT *
+	    FROM event
+	    WHERE 	eventDelete=100
+	    AND		eventCategory=100
+	</select>
+	
+	<select id="tkEventAdSelOne" parameterType="int" resultType="Event">
+		SELECT *
+		FROM event
+		WHERE eventId = #{eventId}
+	</select>
+	
+	<delete id="tkEventAdDel" parameterType="Event">
+		DELETE FROM event
+		WHERE eventId=#{eventId}
+	</delete>
+</mapper>

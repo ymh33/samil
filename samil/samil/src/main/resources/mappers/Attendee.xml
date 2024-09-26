@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.oracle.samil.HsDao.HsCalDao">
+	<select id="tkReqAttList" parameterType="map" resultType="Attendee">
+		SELECT  e.name,
+				e.empno,
+				c.eventTitle,
+				c.eventWriter,
+				c.eventStartdate,
+				c.eventEnddate,
+				c.eventCategory,
+				c.eventMemo,
+				c.eventLoc,
+				c.eventFile,
+				c.eventDelete,
+				a.attendRes,
+				a.attendRsvp,
+				a.attendId,
+				a.eventId
+		FROM event c
+		JOIN attendee a ON c.eventId=a.eventId
+		JOIN emp e ON c.eventWriter=e.empno
+		WHERE a.attendRes = 100
+		AND a.attendId=#{empno}
+	</select>
+	
+	<update id="tkAttAccupdate" parameterType="Attendee">
+		UPDATE  attendee 
+		SET		attendRes=#{attendRes}
+		WHERE 	eventId=#{eventId}
+		AND		attendId=#{attendId}
+	</update>
+	
+	<update id="tkAttRejupdate" parameterType="Attendee">
+		UPDATE  attendee 
+		SET		attendRes=#{attendRes}
+		WHERE 	eventId=#{eventId}
+		AND		attendId=#{attendId}
+	</update>
+	
+	<select id="tkResAttList" parameterType="map" resultType="Attendee">
+		SELECT  e.name,
+				e.empno,
+				c.eventTitle,
+				c.eventStartdate,
+				c.eventEnddate,
+				c.eventCategory,
+				c.eventMemo,
+				c.eventLoc,
+				c.eventFile,
+				c.eventDelete,
+				a.attendRes,
+				a.attendRsvp,
+				a.attendId,
+				a.eventId
+		FROM event c
+		JOIN attendee a ON c.eventId=a.eventId
+		JOIN emp e ON a.attendId=e.empno
+		WHERE c.eventWriter=#{empno}
+	</select>
+</mapper>

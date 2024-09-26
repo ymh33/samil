@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace = "com.oracle.samil.Amodel.AttendanceMapper">
+	<select id="myEmpAttList" parameterType="int" resultType="com.oracle.samil.ADto.AttLeave">
+	    SELECT		e.name, a.workDate, a.clockIn, a.clockOut, a.overTime, a.attStatus
+	    FROM		attendance a
+	    JOIN		emp e ON a.empno = e.empno
+	    WHERE		e.empno = #{empno}
+	    ORDER BY	a.workDate
+	</select>
+	<select id="myLeaveList" parameterType="int" resultType="com.oracle.samil.ADto.AttLeave">
+		SELECT		e.name, f.documentFormId, f.furloughDetailsCode, f.furloughServiceData, f.furloughStartDate, f.furloughEndDate
+		FROM		furloughDetails f
+		JOIN		approval a ON f.approvalnum = a.approvalnum
+		JOIN		emp e ON a.empno = e.empno
+		WHERE		e.empno = #{empno}
+		ORDER BY	f.furloughStartDate
+	</select>
+	<select id="adminDeptAtt" parameterType="int" resultType="com.oracle.samil.ADto.AttLeave">
+	    SELECT		e.empno, e.name, d.deptno, d.deptName,
+	    			a.workDate, a.clockIn, a.clockOut, a.overTime, a.attStatus
+	    FROM		attendance a
+	    JOIN		emp e ON a.empno = e.empno
+	    JOIN		dept d ON e.deptno = d.deptno
+	    WHERE		e.deptno = #{deptno}
+	    ORDER BY	a.workDate
+	</select>
+	<select id="adminDeptLeave" parameterType="int" resultType="com.oracle.samil.ADto.AttLeave">
+	    SELECT		e.empno, e.name, e.deptno, e.totalVacation, e.restVacation, d.deptName,
+	    			f.documentFormId, f.furloughDetailsCode, f.furloughServiceData,
+	            	f.furloughStartDate, f.furloughEndDate
+	    FROM		furloughDetails f
+	    JOIN		approval a ON f.approvalnum = a.approvalnum
+	    JOIN		emp e ON a.empno = e.empno
+	    JOIN		dept d ON e.deptno = d.deptno
+	    WHERE		e.deptno = #{deptno}
+	    ORDER BY	f.furloughStartDate
+	</select>
+
+	<insert id="insertClockIn" parameterType="map">
+	    INSERT INTO attendance (empno, workDate, clockIn, clockOut)
+	    VALUES		(#{empno}, #{workDate}, #{clockIn}, #{clockOut})
+	</insert>
+
+	<update id="updateClockOut" parameterType="map">
+	    UPDATE		attendance
+	    SET			clockOut = #{clockOut}
+	    WHERE		empno = #{empno} AND workDate = #{workDate}
+	</update>
+	<select id="updateAttendanceStatus" statementType="CALLABLE">
+        { call update_attendance_status }
+    </select>
+	<insert id="calculateOvertime" statementType="CALLABLE">
+        CALL CalculateOvertime(#{empno}, #{now})
+    </insert>
+	<insert id="calculateTotalWorkTime" parameterType="map" statementType="CALLABLE">
+	    CALL CalculateTotWorkTime(#{clockIn}, #{clockOut}, #{totalWorkTime, mode=OUT, jdbcType=DOUBLE})
+	</insert>
+	<select id="isClockedIn" parameterType="map" resultType="boolean">
+        SELECT COUNT(*) > 0
+        FROM attendance
+        WHERE empno = #{empno}
+        AND work_date = #{workDate}
+        AND clock_in IS NOT NULL
+    </select>
+	<select id="isClockedOut" parameterType="map" resultType="boolean">
+        SELECT COUNT(*) > 0
+        FROM attendance
+        WHERE empno = #{empno}
+        AND work_date = #{workDate}
+        AND clock_out IS NOT NULL
+    </select>
+</mapper>

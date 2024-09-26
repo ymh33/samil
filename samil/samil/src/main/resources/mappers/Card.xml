@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.oracle.samil.HbDao.CardDao">
+
+	<select id="getCardList" resultType="Card">
+		select  c.cardNum, c.cardBank, c.cardPermit, d.name
+		From card c, emp d
+		where d.empno(+) = c.empno
+ 	</select>
+ 	
+	<insert id="cardAdd" parameterType="Card">
+	    insert into card (cardNum, cardBank, empno, cardDelGubun)
+	    values (#{cardNum}, #{cardBank}, #{empno}, #{cardDelGubun})
+	</insert>
+	
+	<select id="getCardUseList" resultType="CardUse">
+		select  cu. cardNum, cu.place, e.name, cu.usedate,	cu.cardCost, e.deptno, cu.useNum
+		From card c, cardUse cu, emp e
+		WHERE c.empno(+) = e.empno
+		AND      cu.cardNum = c.cardNum
+		Order by cu.usedate desc
+ 	</select>
+ 	
+		<select id="getCardDetails" parameterType="String" resultType="Card">
+     		SELECT c.*, e.name, e.deptno, e.empno
+    		FROM Card c,  Emp e
+   			Where c.empno = e.empno
+    		and c.cardNum = #{cardNum}
+		</select>
+		
+	 	<insert id="cardUseAdd" parameterType="CardUse">
+	    insert into cardUse (cardNum, place, usedate, cardCost, cardPaper)
+	    values (#{cardNum}, #{place}, #{usedate}, #{cardCost},#{cardPaper})
+		</insert>
+
+ 	
+	<update id="setLostCard" parameterType="Card">
+		UPDATE card
+        SET cardDelGubun = 110
+        WHERE cardNum = #{cardNum} AND cardDelGubun = 100
+	</update>
+	
+	 <select id="searchCard" parameterType="CardUse" resultType="CardUse">
+    SELECT * 
+    FROM 
+    ( 
+        SELECT ROWNUM rn, a.* 
+        FROM 
+        (
+            SELECT *
+            FROM CardUse
+            <where>
+                <choose>
+                    <when test="search == 'cardNum'">
+                        cardNum LIKE '%' || #{keyword} || '%'
+                    </when>
+                    <when test="search == 'empno'">
+                        empno LIKE '%' || #{keyword} || '%'
+                    </when>
+                    <when test="search == 'deptno'">
+                        deptno LIKE '%' || #{keyword} || '%'
+                    </when>
+                    <when test="search == 'useDate'">
+                        useDate LIKE '%' || #{keyword} || '%'
+                    </when>
+                    <otherwise>
+                        cardNum LIKE '%' || #{keyword} || '%'
+                    </otherwise>
+                </choose>
+            </where>
+            ORDER BY useDate DESC
+        ) a
+    )
+</select>
+
+	
+
+
+</mapper>
