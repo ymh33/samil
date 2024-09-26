@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <typeInfoHistroy>
-    <typeInfo handle="=samil/src\/main\/java=/gradle_scope=/main=/=/gradle_used_by_scope=/main,test=/&lt;com.oracle.samil.MhDao{SalDao.java[SalDao" modifiers="513" timestamp="1726810688878"/>
-    <typeInfo handle="=samil/src\/main\/java=/gradle_scope=/main=/=/gradle_used_by_scope=/main,test=/&lt;com.oracle.samil.MhService{SalService.java[SalService" modifiers="513" timestamp="1726810632759"/>
+    <typeInfo handle="=samil/src\/main\/java=/gradle_scope=/main=/=/gradle_used_by_scope=/main,test=/&lt;com.oracle.samil.MhDao{SalDao.java[SalDao" modifiers="513" timestamp="1726890670547"/>
+    <typeInfo handle="=samil/src\/main\/java=/gradle_scope=/main=/=/gradle_used_by_scope=/main,test=/&lt;com.oracle.samil.MhService{SalService.java[SalService" modifiers="513" timestamp="1726890579874"/>
     <typeInfo handle="=samil/src\/main\/java=/gradle_scope=/main=/=/gradle_used_by_scope=/main,test=/&lt;com.oracle.samil.Mhrepository{SalRepository.java[SalRepository" modifiers="513" timestamp="1726122053383"/>
 </typeInfoHistroy>
