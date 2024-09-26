@@ -116,6 +116,23 @@ public class SalDoaI implements SalDao {
 		return findSalDate;
 	}
 
+	@Override
+	public int updateSal(int empno, int salBase, int salFood, int salBonus, int salNight, String account) {
+		System.out.println("dao start");
+		int updateSal = 0;
+		try {
+			updateSal = session.update("updatSal", empno);
+			System.out.println(empno);
+			System.out.println("salbase dao->"+salBase);
+			
+		}catch (Exception e) {
+			// TODO: handle exception
+		}
+		return updateSal;
+	}
+
+
+
 
 
 }

@@ -78,4 +78,19 @@ public class SalServiceI implements SalService {
 		return getSalDate;
 	}
 
+
+	@Override
+	public int updateSal(int empno, int salBase, int salFood, int salBonus, int salNight, String account) {
+		int salupdate = sd.updateSal(empno,salBase, salFood, salBonus, salNight, account);
+		
+		System.out.println("salupdate service->" +salupdate);
+		System.out.println("salupdate service empno->" +empno);
+		System.out.println("salupdate service salbase->" +salBase);
+		
+		return salupdate;
+		
+	}
+
+
+
 }
