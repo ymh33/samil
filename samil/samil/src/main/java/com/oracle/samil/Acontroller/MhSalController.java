@@ -193,6 +193,32 @@ public class MhSalController {
 			return "mh/adminSalGiveD";
 		}
 		
+		@PostMapping("/updateSal")
+	    @ResponseBody
+	    public ResponseEntity<Map<String, Integer>> updateSal(
+	        @RequestParam("empno") int empno,
+	        @RequestParam("salBase") int salBase,
+	        @RequestParam("salFood") int salFood,
+	        @RequestParam("salBonus") int salBonus,
+	        @RequestParam("salNight") int salNight,
+	        @RequestParam("account") String account) {
+		    try {
+		        // 필요한 필드 값들을 업데이트하는 메서드를 호출
+		        int updateResult = ss.updateSal(empno, salBase, salFood, salBonus, salNight, account);
+
+		        // 응답 데이터를 Map으로 생성
+		        Map<String, Integer> response = new HashMap<>();
+		        response.put("updatedRows", updateResult); // 업데이트된 행의 개수 반환
+		        System.out.println(response);
+
+		        // 성공 응답
+		        return ResponseEntity.ok(response);
+		    } catch (Exception e) {
+		        // 예외가 발생하면 500 응답을 보냅니다.
+		        return ResponseEntity.status(500).body(null);
+		    }
+		}
+
 		@GetMapping(value = "/adminSalList")
 		public String sal_list (){
 			System.out.println("mh admin_sal_list play~");

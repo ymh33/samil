@@ -23,5 +23,7 @@ public interface SalDao {
 
 	String findSalDate();
 
+	int updateSal(int empno, int salBase, int salFood, int salBonus, int salNight, String account);
+
 
 }

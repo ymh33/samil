@@ -23,5 +23,6 @@ public interface SalService {
 
 	String getSalDate();
 
+	int updateSal(int empno, int salBase, int salFood, int salBonus, int salNight, String account);
 
 }

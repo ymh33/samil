@@ -12,6 +12,8 @@
 <meta charset="UTF-8">
 <title>관리자 급여설정 페이지입니다</title>
 <script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script>
+
+
 <style type="text/css">
 .text {
   width: 300px;
@@ -42,8 +44,8 @@ margin-left: 80%
             float: right;
         }
         
-                #btn2{
-            border-radius: 5px;
+        #btn2{
+			border-radius: 5px;
             border: 1px solid rgb(233, 233, 233);
             background-color: rgba(0,0,0,0);
             color: black;; 
@@ -54,24 +56,23 @@ margin-left: 80%
             color:black;
             background-color: rgb(233, 233, 233);
         }
-                #btn2:hover{
+        #btn2:hover{
             color:black;
             background-color: rgb(233, 233, 233);
         }
         
 .sertchList {
-float: left; width: 33%; padding:10px;   
- font-size: 15px;
-
+	float: left; width: 33%; padding:10px;   
+	font-size: 15px;
 }
 
 #key {
-float: left; width: 33%; padding:10px;  
- border: 0;
-  border-radius: 15px;
-  outline: none;
-  background-color: rgb(233, 233, 233);
-   font-size: 15px;
+	float: left; width: 33%; padding:10px;  
+ 	border: 0;
+	border-radius: 15px;
+ 	outline: none;
+  	background-color: rgb(233, 233, 233);
+   	font-size: 15px;
 }
 
 </style>
@@ -143,6 +144,7 @@ float: left; width: 33%; padding:10px;
 			</table>
 
 		</div>
+		
 		<div class="row col-sm-4 g-3">
 			<table class='table table-striped'>
 
@@ -181,7 +183,7 @@ float: left; width: 33%; padding:10px;
 					기본급 : <input type="text" id="isalBase" value="${shemp.salBase }"  class="text"><p> 
 					식대 :  <input type="text" id="isalFood" value="${shemp.salFood }"  class="text"><p>
 					상여 :  <input type="text" id="isalBonus"  value="${shemp.salBonus }"   class="text"><p> 
-					추가수당 :  <input type="text" id="isalNight" value="${shemp.salNight }"  class="text"><p>
+					추가수당 :  <input type="text" id="isalNight" readonly="readonly" value="${shemp.salNight }"  class="text"><p>
 					</p>
 					</div>
 						</form>
@@ -192,73 +194,61 @@ float: left; width: 33%; padding:10px;
 					<th>
 						
 						계좌번호 : 
-								<input type="text" id="iaccount"  class="text">
+								<select>
+								<option>토스뱅크</option>
+								<option>우리은행</option>
+								<option>농협은행</option>
+								<option>카카오뱅크</option>
+								<option>기업은행</option>
+								<option>하나은행</option>
+								<option>새마을금고</option>
+								<option>국민은행</option>
+								</select>
+								
+								<input type="text" id="iaccount"  value="${shemp.account }" class="text">
 							
 							<button id="btn1"  onclick="location.href='/mh/adminSalSet?currentPage=1'">취소</button>
-							<button id="btn2">저장</button>
+							<button id="btn2"  onclick="salDList(${emp.empno})">저장</button>
     
 			</table>
 		</div>
 	</div>
+<script type="text/javascript">
+        function salDList(empno) {
+            console.log("start");
+            // 입력 필드 값 가져오기
+            var empno = '${shemp.empno}';
+            var salBase = $('#isalBase').val();
+            var salFood = $('#isalFood').val();
+            var salBonus = $('#isalBonus').val();
+            var salNight = $('#isalNight').val();
+            var account = $('#iaccount').val();
+            console.log(empno);
 
-
-	<script type="text/javascript">
-    function salDList(empno) {
-        $.ajax({
-            url: "/mh/getDeptName?empno=" + empno, 
-            type: "GET",         
-			dataType:'json',
-            success: function(response) {
-
-            	 let gradeName = '';
-                 switch(response.response.grade) {
-                     case 100:
-                         gradeName = '사원';
-                         break;
-                     case 110:
-                         gradeName = '주임';
-                         break;
-                     case 120:
-                         gradeName = '대리';
-                         break;
-                     case 130:
-                         gradeName = '과장';
-                         break;
-                     case 140:
-                         gradeName = '차장';
-                         break;
-                     case 150:
-                         gradeName = '부장';
-                         break;
-                     case 160:
-                         gradeName = '사장';
-                         break;
-                     default:
-                         gradeName = '직급 정보 없음';
-                 }
-                $('#iname').val(response.response.name);
-                $('#idate').val(response.response.hiredate);
-                $('#idname').val(response.response.deptName);
-                $('#igraed').val(gradeName);
-                $('#isalBase').val(response.response.salBase);
-                $('#isalFood').val(response.response.salFood);
-                $('#isalBonus').val(response.response.salBonus);
-                $('#isalNight').val(response.response.salNight);
-                $('#iaccount').val(response.response.bank + " - " + response.response.account);
-                $('#salDate').val(response.response.salDate);
-                $('#btn1').attr("onclick", "location.href='/mh/admin_sal_setUpdate?empno=" + empno + "'");
-
-            },
-            error: function(xhr, status, error) {
-                console.error("AJAX 요청 중 오류 발생: ", status, error);
-                console.log("응답 내용: ", xhr.responseText); 
-            }
-        });
-    }
-
-	        	        
-	</script>
-	
+            
+            $.ajax({
+                url: '/mh/updateSal', 
+                type: 'POST',
+                data: {
+                    empno: empno,
+                    salBase: salBase,
+                    salFood: salFood,
+                    salBonus: salBonus,
+                    salNight: salNight,
+                    account: account
+                },
+                success: function(response) {
+                    alert('급여 정보가 성공적으로 업데이트되었습니다.');
+                    console.log("re"+response);
+                },
+                error: function(xhr, status, error) {
+                    console.error('오류 발생: ' + error);
+                    alert('급여 정보 업데이트 중 오류가 발생했습니다.');
+                }
+            });
+        }
+                
+</script>
 	
 	
 </body>

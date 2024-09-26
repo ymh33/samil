@@ -84,6 +84,13 @@ select saldate from sal where salnum = (select max(salnum) from sal)and rownum=1
 
 </select>
 
+<update id="updateSal" parameterType="int">
+update sal set 
+(salbase=#{salbase}, salfood=#{salfood}, salbonus=#{salbonus}) 
+where empno=#{empno}
+ and salnum = (select max(salnum) from sal where empno = ${empno}
+</update>
+
 
 </mapper>
         
